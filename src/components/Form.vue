@@ -383,7 +383,7 @@ import {
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 // import the component
 
-const open = ref(false);
+const open = ref(true);
 const title = ref("Wordle For Good");
 const targetWord = ref("HEART");
 const successSelector = ref();

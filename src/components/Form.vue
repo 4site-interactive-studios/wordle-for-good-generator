@@ -83,6 +83,52 @@
                           </div>
                           <div>
                             <label
+                              for="success-selector"
+                              class="block text-sm font-medium text-gray-900"
+                              >Success Selector</label
+                            >
+                            <div class="mt-1">
+                              <input
+                                v-model="successSelector"
+                                type="text"
+                                name="success-selector"
+                                id="success-selector"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              />
+                            </div>
+                            <p
+                              class="mt-2 text-sm text-gray-500"
+                              id="email-description"
+                            >
+                              Query selector for the element that has the
+                              content to show when the game is won.
+                            </p>
+                          </div>
+                          <div>
+                            <label
+                              for="failure-selector"
+                              class="block text-sm font-medium text-gray-900"
+                              >Failure Selector</label
+                            >
+                            <div class="mt-1">
+                              <input
+                                v-model="failureSelector"
+                                type="text"
+                                name="failure-selector"
+                                id="failure-selector"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              />
+                            </div>
+                            <p
+                              class="mt-2 text-sm text-gray-500"
+                              id="email-description"
+                            >
+                              Query selector for the element that has the
+                              content to show when the game is lost.
+                            </p>
+                          </div>
+                          <div>
+                            <label
                               for="bg-color"
                               class="block text-sm font-medium text-gray-900"
                               >Game Background Color</label
@@ -326,7 +372,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUpdated, onBeforeUpdate, watch } from "vue";
 import {
   Dialog,
   DialogPanel,
@@ -340,6 +386,8 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 const open = ref(false);
 const title = ref("Wordle For Good");
 const targetWord = ref("HEART");
+const successSelector = ref();
+const failureSelector = ref();
 
 const bgColor = ref("#fafafa");
 const textColor = ref("#333333");
@@ -365,8 +413,7 @@ const getWord = () => {
 };
 
 const getCode = () => {
-  const code = `
-  title="${title.value}"
+  let code = `
   word="${getWord()}"
   bg-color="${bgColor.value}"
   text-color="${textColor.value}"
@@ -377,17 +424,93 @@ const getCode = () => {
   key-text-color="${keyTextColor.value}"
   key-text-size="${keyTextSize.value}"
   height="${gameHeight.value}"`;
+  if (title.value) {
+    code += `\n  title="${title.value}"`;
+  }
+  if (successSelector.value) {
+    code += `\n  success-selector="${successSelector.value}"`;
+  }
+  if (failureSelector.value) {
+    code += `\n  failure-selector="${failureSelector.value}"`;
+  }
+
   return code;
 };
 
 const save = () => {
+  saveToLocalStorage();
   emit("save", getCode());
   open.value = false;
+};
+
+const saveToLocalStorage = () => {
+  const data = {
+    title: title.value,
+    word: targetWord.value,
+    successSelector: successSelector.value,
+    failureSelector: failureSelector.value,
+    bgColor: bgColor.value,
+    textColor: textColor.value,
+    tileBorderColor: tileBorderColor.value,
+    tileBgColor: tileBgColor.value,
+    tileTextColor: tileTextColor.value,
+    keyBgColor: keyBgColor.value,
+    keyTextColor: keyTextColor.value,
+    keyTextSize: keyTextSize.value,
+    gameHeight: gameHeight.value,
+  };
+  localStorage.setItem("wordle-for-good", JSON.stringify(data));
+};
+
+const loadFromLocalStorage = () => {
+  const data = localStorage.getItem("wordle-for-good");
+  if (data) {
+    const parsed = JSON.parse(data);
+    title.value = parsed.title;
+    targetWord.value = parsed.word;
+    successSelector.value = parsed.successSelector;
+    failureSelector.value = parsed.failureSelector;
+    bgColor.value = parsed.bgColor;
+    textColor.value = parsed.textColor;
+    tileBorderColor.value = parsed.tileBorderColor;
+    tileBgColor.value = parsed.tileBgColor;
+    tileTextColor.value = parsed.tileTextColor;
+    keyBgColor.value = parsed.keyBgColor;
+    keyTextColor.value = parsed.keyTextColor;
+    keyTextSize.value = parsed.keyTextSize;
+    gameHeight.value = parsed.gameHeight;
+  }
 };
 
 defineExpose({ openModal, getCode });
 const emit = defineEmits(["save"]);
 onMounted(() => {
+  loadFromLocalStorage();
   emit("save", getCode());
 });
+onBeforeUpdate(() => {
+  saveToLocalStorage();
+  emit("save", getCode());
+});
+watch(
+  () => [
+    title.value,
+    targetWord.value,
+    successSelector.value,
+    failureSelector.value,
+    bgColor.value,
+    textColor.value,
+    tileBorderColor.value,
+    tileBgColor.value,
+    tileTextColor.value,
+    keyBgColor.value,
+    keyTextColor.value,
+    keyTextSize.value,
+    gameHeight.value,
+  ],
+  () => {
+    saveToLocalStorage();
+    emit("save", getCode());
+  }
+);
 </script>

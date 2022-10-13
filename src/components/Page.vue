@@ -148,7 +148,9 @@ function loadPreview(customElement: string) {
 }
 
 function copyScript() {
-  navigator.clipboard.writeText(`<script src=${script.value}></${"script"}>`);
+  navigator.clipboard.writeText(
+    `<script defer src="${script.value}"></${"script"}>`
+  );
   emit("alert", "Script copied to clipboard");
 }
 function copyCode() {

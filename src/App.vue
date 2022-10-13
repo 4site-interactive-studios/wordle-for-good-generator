@@ -26,11 +26,11 @@ function showAlert(message: string) {
   <div class="flex justify-center items-center min-h-screen w-full bg-blue-400">
     <div class="w-full md:w-1/2 bg-white rounded shadow-2xl p-8 m-4 relative">
       <div class="bg-white">
-        <div class="mx-auto max-w-7xl py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl py-8 px-4 lg:px-8">
           <div class="text-center">
             <img
               src="https://www.4sitestudios.com/wp-content/themes/foursite/images/logos/logo-4siteCloud.svg"
-              class="d-block mx-auto"
+              class="d-block mx-auto logo"
             />
             <p
               class="mt-1 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
@@ -59,14 +59,11 @@ function showAlert(message: string) {
 <style scoped>
 @import "https://rsms.me/inter/inter.css";
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 8em;
+  padding: 1em;
   will-change: filter;
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
 }
 </style>

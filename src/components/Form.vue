@@ -66,6 +66,22 @@
                           </div>
                           <div>
                             <label
+                              for="share-title"
+                              class="block text-sm font-medium text-gray-900"
+                              >Share Title</label
+                            >
+                            <div class="mt-1">
+                              <input
+                                v-model="shareTitle"
+                                type="text"
+                                name="share-title"
+                                id="share-title"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
                               for="target-word"
                               class="block text-sm font-medium text-gray-900"
                               >Target Word</label
@@ -149,7 +165,7 @@
                                 type="text"
                                 name="bg-color"
                                 id="bg-color"
-                                class="pl-9 uppercase block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="pl-9 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               />
                             </div>
                           </div>
@@ -175,7 +191,7 @@
                                 type="text"
                                 name="text-color"
                                 id="text-color"
-                                class="pl-9 uppercase block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="pl-9 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               />
                             </div>
                           </div>
@@ -201,7 +217,7 @@
                                 type="text"
                                 name="tile-border-color"
                                 id="tile-border-color"
-                                class="pl-9 uppercase block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="pl-9 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               />
                             </div>
                           </div>
@@ -227,7 +243,7 @@
                                 type="text"
                                 name="tile-bg-color"
                                 id="tile-bg-color"
-                                class="pl-9 uppercase block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="pl-9 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               />
                             </div>
                           </div>
@@ -253,7 +269,7 @@
                                 type="text"
                                 name="tile-text-color"
                                 id="tile-text-color"
-                                class="pl-9 uppercase block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="pl-9 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               />
                             </div>
                           </div>
@@ -279,7 +295,7 @@
                                 type="text"
                                 name="key-bg-color"
                                 id="key-bg-color"
-                                class="pl-9 uppercase block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="pl-9 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               />
                             </div>
                           </div>
@@ -305,7 +321,7 @@
                                 type="text"
                                 name="key-text-color"
                                 id="key-text-color"
-                                class="pl-9 uppercase block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="pl-9 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               />
                             </div>
                           </div>
@@ -385,6 +401,7 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 
 const open = ref(true);
 const title = ref("Wordle For Good");
+const shareTitle = ref(null);
 const targetWord = ref("HEART");
 const successSelector = ref();
 const failureSelector = ref();
@@ -427,6 +444,9 @@ const getCode = () => {
   if (title.value) {
     code += `\n  title="${title.value}"`;
   }
+  if (shareTitle.value) {
+    code += `\n  share-title="${shareTitle.value}"`;
+  }
   if (successSelector.value) {
     code += `\n  success-selector="${successSelector.value}"`;
   }
@@ -446,6 +466,7 @@ const save = () => {
 const saveToLocalStorage = () => {
   const data = {
     title: title.value,
+    shareTitle: shareTitle.value,
     word: targetWord.value,
     successSelector: successSelector.value,
     failureSelector: failureSelector.value,
@@ -467,6 +488,7 @@ const loadFromLocalStorage = () => {
   if (data) {
     const parsed = JSON.parse(data);
     title.value = parsed.title;
+    shareTitle.value = parsed.shareTitle;
     targetWord.value = parsed.word;
     successSelector.value = parsed.successSelector;
     failureSelector.value = parsed.failureSelector;
@@ -495,6 +517,7 @@ onBeforeUpdate(() => {
 watch(
   () => [
     title.value,
+    shareTitle.value,
     targetWord.value,
     successSelector.value,
     failureSelector.value,
